@@ -1,1 +1,22 @@
-[]
+[
+  {
+    "source": "Malabar Gold & Diamonds",
+    "date": "2026-01-08",
+    "purity": "24K",
+    "price_per_gm": 13800,
+    "created_dt": "2026-01-09T01:14:43.139233+05:30",
+    "created_by": "gold-bot@users.noreply.github.com",
+    "modified_dt": null,
+    "modified_by": null
+  },
+  {
+    "source": "Tanishq",
+    "date": "2026-01-08",
+    "purity": "24K",
+    "price_per_gm": 13844,
+    "created_dt": "2026-01-09T01:14:43.139233+05:30",
+    "created_by": "gold-bot@users.noreply.github.com",
+    "modified_dt": null,
+    "modified_by": null
+  }
+]
