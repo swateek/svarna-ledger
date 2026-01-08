@@ -8,14 +8,31 @@ on:
 jobs:
   scrape:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
+
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
-          python-version: '3.12'
-      - name: Install dependencies
+          python-version: "3.12"
+
+      - name: Install uv
         run: |
-          pip install requests
-      - name: Run Scraper
-        run: python scraper/scrape_gold.py
+          curl -LsSf https://astral.sh/uv/install.sh | sh -s -- -b $HOME/.local/bin
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
+
+      - name: Sync dependencies
+        run: |
+          uv sync --frozen
+
+      - name: Run scraper
+        run: uv run python scraper/scrape_gold.py
+
+      - name: Commit updated data
+        run: |
+          git config user.name "gold-bot"
+          git config user.email "gold-bot@users.noreply.github.com"
+          git add data/gold_prices.json
+          git commit -m "Update gold prices" || exit 0
+          git push
