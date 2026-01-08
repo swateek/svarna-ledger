@@ -14,3 +14,10 @@ dependencies = [
 
 [tool.uv]
 # uv specific configuration can be added here if needed
+
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["scraper*"]
+exclude = ["data*", "site*"]
+

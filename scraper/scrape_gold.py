@@ -1,5 +1,10 @@
 # Scraper script to fetch gold prices from Tanishq and Malabar Gold & Diamonds
 
+import json
+import os
+import re
+from datetime import datetime, timedelta, timezone
+
 import requests
 
 
@@ -55,6 +60,12 @@ def scrape_tanishq_gold_price():
 
             results["rates"] = {"22K": gold_22k, "24K": gold_24k, "18K": gold_18k}
             results["success"] = True
+
+            # Extract date from page (format: DD-MM-YYYY)
+            date_match = re.search(r"(\d{2})-(\d{2})-(\d{4})", response.text)
+            if date_match:
+                d, m, y = date_match.groups()
+                results["date"] = f"{y}-{m}-{d}"
         else:
             results["error"] = "Could not find gold rate element on page"
 
@@ -101,7 +112,6 @@ def scrape_malabar_gold_price():
         if "data" in panel_data:
             html_content = panel_data["data"]
             # Extract rates using string parsing (format: "22 KT(916) - </td><td>₹  12650/g")
-            import re
 
             # Pattern to match karat and price
             pattern = r"(\d+)\s*KT\([^)]+\)\s*-\s*</td><td>[^0-9]*(\d+)/g"
@@ -126,6 +136,13 @@ def scrape_malabar_gold_price():
         if "22kt" in rates_data and "22K" not in results["rates"]:
             price_22k = rates_data["22kt"].replace(",", "").split(".")[0]
             results["rates"]["22K"] = price_22k
+
+        # Extract date from getrates updated_time (format: "DD/MM/YYYY HH:MM AM/PM")
+        updated_time = rates_data.get("updated_time", "")
+        date_match = re.search(r"(\d{2})/(\d{2})/(\d{4})", updated_time)
+        if date_match:
+            d, m, y = date_match.groups()
+            results["date"] = f"{y}-{m}-{d}"
 
         if results["rates"]:
             results["success"] = True
@@ -206,6 +223,56 @@ def scrape_gold_price():
     # Summary of success/failure
     successful = sum(1 for r in all_results if r["success"])
     print(f"\nSuccessfully fetched rates from {successful}/{len(all_results)} sources")
+
+    # Update or Append 24K gold prices to JSON file
+    json_path = os.path.join(
+        os.path.dirname(__file__), "..", "data", "gold_prices.json"
+    )
+    try:
+        with open(json_path, "r", encoding="utf-8") as f:
+            existing = json.load(f)
+    except (FileNotFoundError, json.JSONDecodeError):
+        existing = []
+
+    now_tz = datetime.now(timezone(timedelta(hours=5, minutes=30)))
+    today_iso = now_tz.date().isoformat()
+    now_iso = now_tz.isoformat()
+    bot_email = "gold-bot@users.noreply.github.com"
+
+    for result in all_results:
+        if result.get("success") and "24K" in result.get("rates", {}):
+            source = result["source"]
+            new_price = int(result["rates"]["24K"])
+            scraping_date = result.get("date", today_iso)
+
+            # Search for existing record with same source and date
+            found = False
+            for entry in existing:
+                if entry.get("source") == source and entry.get("date") == scraping_date:
+                    # Update if price changed
+                    if entry.get("price_per_gm") != new_price:
+                        entry["price_per_gm"] = new_price
+                        entry["modified_dt"] = now_iso
+                        entry["modified_by"] = bot_email
+                    found = True
+                    break
+
+            if not found:
+                # Add new record
+                entry = {
+                    "source": source,
+                    "date": scraping_date,
+                    "purity": "24K",
+                    "price_per_gm": new_price,
+                    "created_dt": now_iso,
+                    "created_by": bot_email,
+                    "modified_dt": None,
+                    "modified_by": None,
+                }
+                existing.append(entry)
+
+    with open(json_path, "w", encoding="utf-8") as f:
+        json.dump(existing, f, ensure_ascii=False, indent=2)
 
     return all_results
 
