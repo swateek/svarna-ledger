@@ -4,51 +4,51 @@ import requests
 
 
 def scrape_tanishq_gold_price():
-    """Scrape gold prices from Tanishq website."""
+    """Scrape gold prices from Tanishq website using requests + BeautifulSoup."""
     from bs4 import BeautifulSoup
-    from selenium import webdriver
-    from selenium.webdriver.chrome.options import Options
-    from selenium.webdriver.chrome.service import Service
-    from selenium.webdriver.common.by import By
-    from selenium.webdriver.support import expected_conditions as EC
-    from selenium.webdriver.support.ui import WebDriverWait
-    from webdriver_manager.chrome import ChromeDriverManager
 
     url = "https://www.tanishq.co.in/gold-rate.html?lang=en_IN"
 
-    # Setup Chrome options for headless browsing
-    chrome_options = Options()
-    chrome_options.add_argument("--headless")
-    chrome_options.add_argument("--no-sandbox")
-    chrome_options.add_argument("--disable-dev-shm-usage")
-    chrome_options.add_argument(
-        "user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
-    )
-
-    # Initialize the driver
-    service = Service(ChromeDriverManager().install())
-    driver = webdriver.Chrome(service=service, options=chrome_options)
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8",
+        "Accept-Language": "en-US,en;q=0.9",
+        "Accept-Encoding": "gzip, deflate",
+        "Connection": "keep-alive",
+        "Referer": "https://www.tanishq.co.in/",
+        "sec-ch-ua": '"Not_A Brand";v="8", "Chromium";v="120", "Google Chrome";v="120"',
+        "sec-ch-ua-mobile": "?0",
+        "sec-ch-ua-platform": '"Windows"',
+        "Sec-Fetch-Dest": "document",
+        "Sec-Fetch-Mode": "navigate",
+        "Sec-Fetch-Site": "same-origin",
+        "Sec-Fetch-User": "?1",
+        "Upgrade-Insecure-Requests": "1",
+    }
 
     results = {"source": "Tanishq", "success": False, "rates": {}, "error": None}
 
     try:
-        driver.get(url)
+        # Create a session to handle cookies
+        session = requests.Session()
 
-        # Wait for the gold rate element to be present
-        wait = WebDriverWait(driver, 15)
-        wait.until(
-            EC.presence_of_element_located((By.CSS_SELECTOR, "span.goldpurity-rate"))
-        )
+        # First visit home page to get necessary cookies
+        session.get("https://www.tanishq.co.in/", headers=headers, timeout=15)
 
-        # Parse the page source
-        soup = BeautifulSoup(driver.page_source, "html.parser")
+        # Fetch the gold rate page
+        response = session.get(url, headers=headers, timeout=15)
+        response.raise_for_status()
 
-        # Find the span with gold rate data attributes
-        # The prices for all karats are stored as data attributes on this element
+        # Parse the page
+        soup = BeautifulSoup(response.text, "html.parser")
+
+        # Find the first span with gold rate data attributes
+        # The gold rates are embedded as data attributes in span.goldpurity-rate elements
+        # The first occurrence contains today's rates
         rate_span = soup.find("span", class_="goldpurity-rate")
 
         if rate_span:
-            # Extract prices from data attributes (values are per gram)
+            # Extract prices from data attributes (values are per gram in INR)
             gold_22k = rate_span.get("data-goldrate22kt", "Not found")
             gold_24k = rate_span.get("data-goldrate24kt", "Not found")
             gold_18k = rate_span.get("data-goldrate18kt", "Not found")
@@ -58,11 +58,10 @@ def scrape_tanishq_gold_price():
         else:
             results["error"] = "Could not find gold rate element on page"
 
+    except requests.RequestException as e:
+        results["error"] = f"Request failed: {str(e)}"
     except Exception as e:
         results["error"] = str(e)
-
-    finally:
-        driver.quit()
 
     return results
 
@@ -112,7 +111,7 @@ def scrape_malabar_gold_price():
                 results["rates"][f"{karat}K"] = price
 
         # Also fetch the getrates API for 24K rate (may not be in panel)
-        rates_url = "https://www.malabargoldanddiamonds.com/malabarprice/index/getrates/?country=IN&state=Kerala"
+        rates_url = "https://www.malabargoldanddiamonds.com/malabarprice/index/getrates/?country=IN&state=Karnataka"
         rates_response = session.get(rates_url, headers=headers)
         rates_response.raise_for_status()
         rates_data = rates_response.json()
