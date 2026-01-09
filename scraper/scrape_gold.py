@@ -10,25 +10,30 @@ import requests
 
 def scrape_tanishq_gold_price():
     """Scrape gold prices from Tanishq website using requests + BeautifulSoup."""
+    import random
+    import time
+
     from bs4 import BeautifulSoup
 
     url = "https://www.tanishq.co.in/gold-rate.html?lang=en_IN"
 
+    # More comprehensive headers to bypass anti-bot
     headers = {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
-        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8",
+        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
         "Accept-Language": "en-US,en;q=0.9",
-        "Accept-Encoding": "gzip, deflate",
+        "Accept-Encoding": "gzip, deflate, br",
         "Connection": "keep-alive",
-        "Referer": "https://www.tanishq.co.in/",
-        "sec-ch-ua": '"Not_A Brand";v="8", "Chromium";v="120", "Google Chrome";v="120"',
-        "sec-ch-ua-mobile": "?0",
-        "sec-ch-ua-platform": '"Windows"',
+        "Referer": "https://www.google.com/",
+        "DNT": "1",
+        "Upgrade-Insecure-Requests": "1",
         "Sec-Fetch-Dest": "document",
         "Sec-Fetch-Mode": "navigate",
-        "Sec-Fetch-Site": "same-origin",
+        "Sec-Fetch-Site": "cross-site",
         "Sec-Fetch-User": "?1",
-        "Upgrade-Insecure-Requests": "1",
+        "sec-ch-ua": '"Not_A Brand";v="8", "Chromium";v="120", "Google Chrome";v="120"',
+        "sec-ch-ua-mobile": "?0",
+        "sec-ch-ua-platform": '"macOS"',
     }
 
     results = {"source": "Tanishq", "success": False, "rates": {}, "error": None}
@@ -37,11 +42,21 @@ def scrape_tanishq_gold_price():
         # Create a session to handle cookies
         session = requests.Session()
 
-        # First visit home page to get necessary cookies
-        session.get("https://www.tanishq.co.in/", headers=headers, timeout=15)
+        # Add a small random delay before starting
+        time.sleep(random.uniform(1, 3))
+
+        # First visit home page to get necessary cookies, mimicking a user coming from Google
+        session.get("https://www.tanishq.co.in/", headers=headers, timeout=20)
+
+        # Update referer for the actual page request
+        headers["Referer"] = "https://www.tanishq.co.in/"
+        headers["Sec-Fetch-Site"] = "same-origin"
+
+        # Wait a bit more before fetching the gold rate page
+        time.sleep(random.uniform(1, 2))
 
         # Fetch the gold rate page
-        response = session.get(url, headers=headers, timeout=15)
+        response = session.get(url, headers=headers, timeout=20)
         response.raise_for_status()
 
         # Parse the page
@@ -270,6 +285,9 @@ def scrape_gold_price():
                     "modified_by": None,
                 }
                 existing.append(entry)
+
+    # Ensure directory exists
+    os.makedirs(os.path.dirname(json_path), exist_ok=True)
 
     with open(json_path, "w", encoding="utf-8") as f:
         json.dump(existing, f, ensure_ascii=False, indent=2)

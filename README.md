@@ -1,5 +1,7 @@
 # SvarṇaLedger (svarna-ledger)
 
+[![Scrape Gold Prices](https://github.com/swateek/svarna-ledger/actions/workflows/scrape.yml/badge.svg)](https://github.com/swateek/svarna-ledger/actions/workflows/scrape.yml)
+
 SvarṇaLedger is a transparent, append-only tracker of daily gold prices in India. It scrapes official jeweller websites once a day via GitHub Actions and publishes searchable tables and historical charts using a static GitHub Pages site — no backend, no ads, no noise.
 
 **Live Application:** [https://swateek.github.io/svarna-ledger/](https://swateek.github.io/svarna-ledger/)

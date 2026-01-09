@@ -8,6 +8,8 @@ on:
 jobs:
   scrape:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     if: github.ref == 'refs/heads/main'
 
     steps:
@@ -20,7 +22,7 @@ jobs:
 
       - name: Install uv
         run: |
-          curl -LsSf https://astral.sh/uv/install.sh | sh -s -- -b $HOME/.local/bin
+          curl -LsSf https://astral.sh/uv/install.sh | UV_INSTALL_DIR=$HOME/.local/bin sh
           echo "$HOME/.local/bin" >> $GITHUB_PATH
 
       - name: Sync dependencies
