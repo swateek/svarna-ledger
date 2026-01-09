@@ -34,8 +34,8 @@ jobs:
 
       - name: Commit updated data
         run: |
-          git config user.name "gold-bot"
-          git config user.email "gold-bot@users.noreply.github.com"
+          git config user.name "swateek"
+          git config user.email "swateek@no-reply.github.com"
           git add docs/data/gold_prices.json
           git commit -m "Update gold prices" || exit 0
           git push
