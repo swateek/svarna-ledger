@@ -1,7 +1,7 @@
 $(document).ready(function () {
     $('#gold-prices-table').DataTable({
         ajax: {
-            url: '../data/gold_prices.json',
+            url: 'data/gold_prices.json',
             dataSrc: ''
         },
         columns: [

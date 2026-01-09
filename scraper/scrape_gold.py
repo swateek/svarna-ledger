@@ -226,7 +226,7 @@ def scrape_gold_price():
 
     # Update or Append 24K gold prices to JSON file
     json_path = os.path.join(
-        os.path.dirname(__file__), "..", "data", "gold_prices.json"
+        os.path.dirname(__file__), "..", "docs", "data", "gold_prices.json"
     )
     try:
         with open(json_path, "r", encoding="utf-8") as f:
