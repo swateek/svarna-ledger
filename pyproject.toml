@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "svarna-ledger"
+version = "0.1.0"
+description = "A simple ledger project with a scraper for gold prices"
+requires-python = ">=3.10"
+dependencies = [
+    "requests",
+    "beautifulsoup4"
+]
+
+[tool.uv]
+# uv specific configuration can be added here if needed
+
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["scraper*"]
+exclude = ["data*", "docs*"]
+
