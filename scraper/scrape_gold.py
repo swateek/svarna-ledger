@@ -271,6 +271,9 @@ def scrape_gold_price():
                 }
                 existing.append(entry)
 
+    # Ensure directory exists
+    os.makedirs(os.path.dirname(json_path), exist_ok=True)
+
     with open(json_path, "w", encoding="utf-8") as f:
         json.dump(existing, f, ensure_ascii=False, indent=2)
 
