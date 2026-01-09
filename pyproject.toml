@@ -19,5 +19,5 @@ dependencies = [
 [tool.setuptools.packages.find]
 where = ["."]
 include = ["scraper*"]
-exclude = ["data*", "site*"]
+exclude = ["data*", "docs*"]
 
