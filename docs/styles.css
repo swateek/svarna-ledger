@@ -68,12 +68,25 @@ footer {
     color: var(--text-color) !important;
 }
 
+.dataTables_wrapper .dataTables_filter {
+    margin-bottom: 2rem;
+}
+
 .dataTables_wrapper .dataTables_filter input {
     background-color: #2a2a2a;
     border: 1px solid var(--border-color);
     color: white;
-    border-radius: 4px;
-    padding: 4px 8px;
+    border-radius: 8px;
+    padding: 10px 15px;
+    margin-left: 10px;
+    width: 250px;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.dataTables_wrapper .dataTables_filter input:focus {
+    border-color: var(--primary-color);
+    outline: none;
+    box-shadow: 0 0 8px rgba(212, 175, 55, 0.2);
 }
 
 table.dataTable {

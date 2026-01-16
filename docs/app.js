@@ -5,6 +5,7 @@ $(document).ready(function () {
             dataSrc: ''
         },
         columns: [
+            { data: 'date' },
             { data: 'source' },
             {
                 data: 'price_per_gm',
@@ -12,7 +13,6 @@ $(document).ready(function () {
                     return '₹' + data.toLocaleString('en-IN');
                 }
             },
-            { data: 'date' },
             {
                 data: 'created_dt',
                 render: function (data) {
@@ -26,7 +26,7 @@ $(document).ready(function () {
         responsive: true,
         language: {
             search: "_INPUT_",
-            searchPlaceholder: "Search prices..."
+            searchPlaceholder: "search"
         },
         pageLength: 10,
         lengthMenu: [5, 10, 25, 50]
