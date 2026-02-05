@@ -2,7 +2,7 @@ name: Scrape Gold Prices
 
 on:
   schedule:
-    - cron: '30 5 * * *' # Run daily at 11:00 AM IST (05:30 UTC)
+    - cron: '30 */6 * * *' # Run every 6 hours at :30 UTC
   workflow_dispatch:
 
 jobs:
