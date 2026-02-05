@@ -193,7 +193,7 @@ def scrape_gold_price():
 
     # Define scrapers with their names for error handling
     scrapers = [
-        ("Tanishq", scrape_tanishq_gold_price),
+        # ("Tanishq", scrape_tanishq_gold_price),
         ("Malabar Gold & Diamonds", scrape_malabar_gold_price),
     ]
 
