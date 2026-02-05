@@ -29,7 +29,14 @@ jobs:
         run: |
           uv sync --frozen
 
+      - name: Install Chromium
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y chromium
+
       - name: Run scraper
+        env:
+          CHROME_BIN: /usr/bin/chromium
         run: uv run python scraper/scrape_gold.py
 
       - name: Commit updated data

@@ -8,6 +8,82 @@ from datetime import datetime, timedelta, timezone
 import requests
 
 
+def _parse_google_gold_price(text):
+    """Parse the Google gold price card text and return (price, grams)."""
+    normalized = " ".join(text.split())
+
+    patterns = [
+        (
+            r"10g of 24k gold.*?(Bengaluru|Bangalore).*?([0-9,]+(?:\.\d+)?)\s*Indian Rupee",
+            10,
+        ),
+        (
+            r"1g of 24k gold.*?(Bengaluru|Bangalore).*?([0-9,]+(?:\.\d+)?)\s*Indian Rupee",
+            1,
+        ),
+    ]
+
+    for pattern, grams in patterns:
+        match = re.search(pattern, normalized, re.IGNORECASE)
+        if match:
+            value = float(match.group(2).replace(",", ""))
+            return value, grams
+
+    idx = normalized.lower().find("24k gold")
+    if idx != -1:
+        window = normalized[idx : idx + 300]
+        match = re.search(r"([0-9,]+(?:\.\d+)?)\s*Indian Rupee", window)
+        if match:
+            value = float(match.group(1).replace(",", ""))
+            grams = 10 if value > 50000 else 1
+            return value, grams
+
+    match = re.search(r"([0-9,]+(?:\.\d+)?)\s*Indian Rupee", normalized)
+    if match:
+        value = float(match.group(1).replace(",", ""))
+        grams = 10 if value > 50000 else 1
+        return value, grams
+
+    return None, None
+
+
+def _parse_google_date(text):
+    """Parse the date shown on Google card (e.g., '4 Feb, 4:12 pm IST')."""
+    match = re.search(
+        r"(\d{1,2})\s*(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)",
+        text,
+        re.IGNORECASE,
+    )
+    if not match:
+        return None
+
+    day = int(match.group(1))
+    month_str = match.group(2).title()
+    month_map = {
+        "Jan": 1,
+        "Feb": 2,
+        "Mar": 3,
+        "Apr": 4,
+        "May": 5,
+        "Jun": 6,
+        "Jul": 7,
+        "Aug": 8,
+        "Sep": 9,
+        "Oct": 10,
+        "Nov": 11,
+        "Dec": 12,
+    }
+    month = month_map.get(month_str)
+    if not month:
+        return None
+
+    now_tz = datetime.now(timezone(timedelta(hours=5, minutes=30)))
+    try:
+        return datetime(now_tz.year, month, day).date().isoformat()
+    except ValueError:
+        return None
+
+
 def scrape_tanishq_gold_price():
     """Scrape gold prices from Tanishq website using requests + BeautifulSoup."""
     import random
@@ -86,6 +162,136 @@ def scrape_tanishq_gold_price():
 
     except requests.RequestException as e:
         results["error"] = f"Request failed: {str(e)}"
+    except Exception as e:
+        results["error"] = str(e)
+
+    return results
+
+
+def scrape_google_gold_price():
+    """Scrape gold prices from Google search card using Selenium."""
+    results = {"source": "Google", "success": False, "rates": {}, "error": None}
+
+    try:
+        from selenium import webdriver
+        from selenium.webdriver.chrome.options import Options
+        from selenium.webdriver.common.by import By
+        from selenium.webdriver.support import expected_conditions as EC
+        from selenium.webdriver.support.ui import WebDriverWait
+
+        def build_driver(user_agent, headless_arg, window_size):
+            options = Options()
+            options.add_argument(headless_arg)
+            options.add_argument("--disable-gpu")
+            options.add_argument("--no-sandbox")
+            options.add_argument("--disable-dev-shm-usage")
+            options.add_argument(f"--window-size={window_size}")
+            options.add_argument("--lang=en-IN")
+            options.add_argument("--disable-blink-features=AutomationControlled")
+            options.add_argument("--disable-extensions")
+            options.add_argument("--disable-popup-blocking")
+            options.add_argument("--user-data-dir=/tmp/chrome-google-scrape")
+            options.add_argument(f"--user-agent={user_agent}")
+            options.add_experimental_option(
+                "excludeSwitches", ["enable-automation", "enable-logging"]
+            )
+            options.add_experimental_option("useAutomationExtension", False)
+
+            chrome_bin = os.environ.get("CHROME_BIN")
+            if chrome_bin:
+                options.binary_location = chrome_bin
+
+            return webdriver.Chrome(options=options)
+
+        user_agent_profiles = [
+            (
+                "Mozilla/5.0 (Linux; Android 12; Pixel 6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Mobile Safari/537.36",
+                "412,915",
+            ),
+            (
+                "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+                "1280,720",
+            ),
+            (
+                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36",
+                "1280,720",
+            ),
+        ]
+        headless_modes = ["--headless=new", "--headless=old"]
+
+        last_error = None
+
+        for headless_arg in headless_modes:
+            for user_agent, window_size in user_agent_profiles:
+                try:
+                    driver = build_driver(user_agent, headless_arg, window_size)
+                except Exception as e:
+                    last_error = f"Chrome start failed ({headless_arg}): {str(e)}"
+                    continue
+
+                try:
+                    driver.execute_script(
+                        "Object.defineProperty(navigator, 'webdriver', {get: () => undefined});"
+                    )
+                    driver.execute_cdp_cmd(
+                        "Network.setUserAgentOverride",
+                        {
+                            "userAgent": user_agent,
+                            "platform": "Linux x86_64",
+                            "acceptLanguage": "en-IN,en;q=0.9",
+                        },
+                    )
+
+                    url = "https://www.google.com/search?q=gold+price+india+bangalore&hl=en&gl=IN"
+                    driver.get(url)
+
+                    WebDriverWait(driver, 20).until(
+                        EC.presence_of_element_located((By.TAG_NAME, "body"))
+                    )
+
+                    page_source = driver.page_source.lower()
+                    if "unusual traffic" in page_source or "recaptcha" in page_source:
+                        last_error = "Blocked by Google captcha"
+                        continue
+
+                    # Try targeted extraction first
+                    candidate_texts = []
+                    for el in driver.find_elements(
+                        By.XPATH,
+                        "//*[contains(translate(., 'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'), '24k gold')]",
+                    ):
+                        text = el.text.strip()
+                        if text:
+                            candidate_texts.append(text)
+
+                    body_text = driver.find_element(By.TAG_NAME, "body").text
+                    candidate_texts.append(body_text)
+
+                    price = None
+                    grams = None
+                    for text in candidate_texts:
+                        price, grams = _parse_google_gold_price(text)
+                        if price is not None:
+                            break
+
+                    if price is None:
+                        last_error = "Could not parse price from Google card"
+                        continue
+
+                    price_per_gram = int(round(price / grams))
+                    results["rates"] = {"24K": str(price_per_gram)}
+                    results["success"] = True
+
+                    scraped_date = _parse_google_date(body_text)
+                    if scraped_date:
+                        results["date"] = scraped_date
+
+                    return results
+                finally:
+                    driver.quit()
+
+        results["error"] = last_error or "Could not fetch Google results"
+
     except Exception as e:
         results["error"] = str(e)
 
@@ -195,6 +401,7 @@ def scrape_gold_price():
     scrapers = [
         # ("Tanishq", scrape_tanishq_gold_price),
         ("Malabar Gold & Diamonds", scrape_malabar_gold_price),
+        ("Google", scrape_google_gold_price),
     ]
 
     all_results = []
