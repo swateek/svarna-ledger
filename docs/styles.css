@@ -44,6 +44,58 @@ header p {
     margin-top: 0.5rem;
 }
 
+.filter-container {
+    margin-bottom: 25px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    background: #1a1a1a;
+    padding: 20px;
+    border-radius: 12px;
+    border: 1px solid #333;
+    box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.5);
+}
+
+.filter-label {
+    font-size: 0.9rem;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 600;
+}
+
+.tabs-selector {
+    display: flex;
+    gap: 10px;
+    background: #252525;
+    padding: 6px;
+    border-radius: 10px;
+    width: fit-content;
+}
+
+.tab-btn {
+    background: transparent;
+    border: none;
+    color: #888;
+    padding: 10px 25px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.tab-btn:hover {
+    color: #fff;
+    background: rgba(212, 175, 55, 0.1);
+}
+
+.tab-btn.active {
+    background: var(--primary-color);
+    color: #121212;
+    box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+}
+
 main {
     margin-top: 2rem;
 }
