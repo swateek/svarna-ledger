@@ -16,15 +16,24 @@
     <div class="container">
         <header>
             <h1>Svarna Ledger</h1>
-            <p>Real-time Gold Price Tracker (24K - 1gm)</p>
+            <p>Real-time Gold Price Tracker (per gram)</p>
         </header>
 
         <main>
+            <div class="filter-container">
+                <span class="filter-label">Filter by Purity:</span>
+                <div class="tabs-selector" id="purity-tabs">
+                    <button class="tab-btn active" data-purity="24K">24K</button>
+                    <button class="tab-btn" data-purity="22K">22K</button>
+                    <button class="tab-btn" data-purity="18K">18K</button>
+                </div>
+            </div>
             <table id="gold-prices-table" class="display responsive nowrap" style="width:100%">
                 <thead>
                     <tr>
                         <th>Date</th>
                         <th>Source</th>
+                        <th>Purity</th>
                         <th>Price (per gm)</th>
                         <th>Last Updated</th>
                     </tr>

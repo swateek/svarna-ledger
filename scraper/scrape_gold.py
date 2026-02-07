@@ -461,37 +461,51 @@ def scrape_gold_price():
     now_iso = now_tz.isoformat()
     bot_email = "gold-bot@users.noreply.github.com"
 
+    allowed_purities = ["24K", "22K", "18K"]
+
     for result in all_results:
-        if result.get("success") and "24K" in result.get("rates", {}):
-            source = result["source"]
-            new_price = int(result["rates"]["24K"])
-            scraping_date = result.get("date", today_iso)
+        if result.get("success"):
+            for purity, price_val in result.get("rates", {}).items():
+                if purity not in allowed_purities:
+                    continue
 
-            # Search for existing record with same source and date
-            found = False
-            for entry in existing:
-                if entry.get("source") == source and entry.get("date") == scraping_date:
-                    # Update if price changed
-                    if entry.get("price_per_gm") != new_price:
-                        entry["price_per_gm"] = new_price
-                        entry["modified_dt"] = now_iso
-                        entry["modified_by"] = bot_email
-                    found = True
-                    break
+                source = result["source"]
+                try:
+                    new_price = int(str(price_val).replace(",", "").split(".")[0])
+                except (ValueError, TypeError):
+                    continue
 
-            if not found:
-                # Add new record
-                entry = {
-                    "source": source,
-                    "date": scraping_date,
-                    "purity": "24K",
-                    "price_per_gm": new_price,
-                    "created_dt": now_iso,
-                    "created_by": bot_email,
-                    "modified_dt": None,
-                    "modified_by": None,
-                }
-                existing.append(entry)
+                scraping_date = result.get("date", today_iso)
+
+                # Search for existing record with same source, date, AND purity
+                found = False
+                for entry in existing:
+                    if (
+                        entry.get("source") == source
+                        and entry.get("date") == scraping_date
+                        and entry.get("purity") == purity
+                    ):
+                        # Update if price changed
+                        if entry.get("price_per_gm") != new_price:
+                            entry["price_per_gm"] = new_price
+                            entry["modified_dt"] = now_iso
+                            entry["modified_by"] = bot_email
+                        found = True
+                        break
+
+                if not found:
+                    # Add new record
+                    entry = {
+                        "source": source,
+                        "date": scraping_date,
+                        "purity": purity,
+                        "price_per_gm": new_price,
+                        "created_dt": now_iso,
+                        "created_by": bot_email,
+                        "modified_dt": None,
+                        "modified_by": None,
+                    }
+                    existing.append(entry)
 
     # Ensure directory exists
     os.makedirs(os.path.dirname(json_path), exist_ok=True)
