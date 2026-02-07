@@ -53,6 +53,26 @@ $(document).ready(function () {
     $('.time-btn').on('click', function () {
         $('.time-btn').removeClass('active');
         $(this).addClass('active');
+
+        const range = $(this).data('range');
+        if (range === 'custom') {
+            $('#custom-range-picker').fadeIn();
+            // Set default dates if empty
+            if (!$('#start-date').val() || !$('#end-date').val()) {
+                const now = new Date();
+                const thirtyDaysAgo = new Date();
+                thirtyDaysAgo.setDate(now.getDate() - 30);
+                $('#start-date').val(thirtyDaysAgo.toISOString().split('T')[0]);
+                $('#end-date').val(now.toISOString().split('T')[0]);
+            }
+        } else {
+            $('#custom-range-picker').fadeOut();
+        }
+
+        refreshView();
+    });
+
+    $('.date-input').on('change', function () {
         refreshView();
     });
 
@@ -80,6 +100,16 @@ $(document).ready(function () {
                 return itemDate.getMonth() === lastMonth && itemDate.getFullYear() === lastMonthYear;
             } else if (rangeFilter === 'this-year') {
                 return itemDate.getFullYear() === currentYear;
+            } else if (rangeFilter === 'custom') {
+                const startDateStr = $('#start-date').val();
+                const endDateStr = $('#end-date').val();
+                if (!startDateStr || !endDateStr) return true;
+
+                const start = new Date(startDateStr);
+                const end = new Date(endDateStr);
+                end.setHours(23, 59, 59, 999); // Inclusion of end day
+
+                return itemDate >= start && itemDate <= end;
             } else if (rangeFilter === 'all') {
                 return true;
             }
@@ -188,6 +218,18 @@ $(document).ready(function () {
                 const itemDate = new Date(item.date);
                 return itemDate.getFullYear() === currentYear;
             });
+        } else if (rangeFilter === 'custom') {
+            const startDateStr = $('#start-date').val();
+            const endDateStr = $('#end-date').val();
+            if (startDateStr && endDateStr) {
+                const start = new Date(startDateStr);
+                const end = new Date(endDateStr);
+                end.setHours(23, 59, 59, 999);
+                filtered = filtered.filter(item => {
+                    const itemDate = new Date(item.date);
+                    return itemDate >= start && itemDate <= end;
+                });
+            }
         }
 
         // Sort by date ascending for chart

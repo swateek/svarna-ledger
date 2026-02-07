@@ -133,6 +133,47 @@ main {
     margin-top: 2rem;
 }
 
+/* Custom Range Picker Styles */
+.range-inputs {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: #252525;
+    padding: 6px 12px;
+    border-radius: 10px;
+    width: fit-content;
+}
+
+.date-input {
+    background: transparent;
+    border: none;
+    color: var(--text-color);
+    font-family: 'Inter', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 500;
+    padding: 5px;
+    cursor: pointer;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+.date-input::-webkit-calendar-picker-indicator {
+    filter: invert(0.7) sepia(1) saturate(5) hue-rotate(10deg);
+    /* Gold-ish tint */
+    cursor: pointer;
+}
+
+.date-input:hover {
+    color: var(--primary-color);
+}
+
+.range-separator {
+    color: #666;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
 footer {
     text-align: center;
     margin-top: 3rem;
