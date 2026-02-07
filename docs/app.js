@@ -39,6 +39,7 @@ $(document).ready(function () {
         lengthMenu: [5, 10, 25, 50],
         initComplete: function (settings, json) {
             initChart(json);
+            refreshView();
         }
     });
 
@@ -123,6 +124,57 @@ $(document).ready(function () {
 
         // Update chart
         updateChart(goldData, purity, range);
+
+        // Update historical stats
+        updateHistoricalStats(goldData, purity);
+    }
+
+    function updateHistoricalStats(data, purity) {
+        const filtered = data.filter(item => item.purity === purity);
+        if (filtered.length === 0) return;
+
+        // 1. Current Value Logic
+        // Find latest date in the dataset for this purity
+        const latestDate = filtered.reduce((max, item) => item.date > max ? item.date : max, filtered[0].date);
+        const latestEntries = filtered.filter(item => item.date === latestDate);
+
+        // Pick the entry with the highest price for that date (if multiple sources)
+        const currentItem = latestEntries.sort((a, b) => b.price_per_gm - a.price_per_gm)[0];
+
+        // 2. 30-day stats
+        const now = new Date();
+        const thirtyDaysAgo = new Date();
+        thirtyDaysAgo.setDate(now.getDate() - 30);
+
+        const last30Days = filtered.filter(item => new Date(item.date) >= thirtyDaysAgo);
+
+        let thirtyDayLow = { price_per_gm: 'N/A' };
+        let thirtyDayHigh = { price_per_gm: 'N/A' };
+
+        if (last30Days.length > 0) {
+            const sorted30 = [...last30Days].sort((a, b) => a.price_per_gm - b.price_per_gm);
+            thirtyDayLow = sorted30[0];
+            thirtyDayHigh = sorted30[sorted30.length - 1];
+        }
+
+        // Update DOM
+        $('#current-price').text('₹' + currentItem.price_per_gm.toLocaleString('en-IN'));
+        $('#current-source').text(currentItem.source);
+        $('#current-date').text(new Date(currentItem.date).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }));
+
+        const timestamp = currentItem.modified_dt || currentItem.created_dt;
+        if (timestamp) {
+            const time = new Date(timestamp);
+            $('#current-time').text('Refreshed: ' + time.toLocaleString());
+        } else {
+            $('#current-time').text('');
+        }
+
+        $('#30-day-high').text(thirtyDayHigh.price_per_gm !== 'N/A' ? '₹' + thirtyDayHigh.price_per_gm.toLocaleString('en-IN') : 'N/A');
+        $('#month-high-purity').text(purity + ' Gold');
+
+        $('#30-day-low').text(thirtyDayLow.price_per_gm !== 'N/A' ? '₹' + thirtyDayLow.price_per_gm.toLocaleString('en-IN') : 'N/A');
+        $('#month-low-purity').text(purity + ' Gold');
     }
 
     function initChart(data) {
