@@ -22,7 +22,7 @@ $(document).ready(function () {
                 }
             }
         ],
-        order: [[3, 'desc']], // Sort by created_dt descending by default
+        order: [[0, 'desc']], // Sort by date descending by default
         responsive: true,
         language: {
             search: "_INPUT_",
