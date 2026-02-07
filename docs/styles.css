@@ -14,15 +14,18 @@ body {
     margin: 0;
     padding: 0;
     line-height: 1.6;
+    overflow-x: hidden;
 }
 
 .container {
-    max-width: 1000px;
+    width: 95%;
+    max-width: 1200px;
     margin: 2rem auto;
     padding: 2rem;
     background-color: var(--card-bg);
     border-radius: 12px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    box-sizing: border-box;
 }
 
 header {
@@ -153,6 +156,7 @@ header p {
 
 .tabs-selector {
     display: flex;
+    flex-wrap: wrap;
     gap: 10px;
     background: #252525;
     padding: 6px;
@@ -325,11 +329,39 @@ table.dataTable tbody tr:hover {
 
 @media (max-width: 600px) {
     .container {
-        margin: 1rem;
-        padding: 1rem;
+        width: 100%;
+        margin: 0;
+        padding: 1.5rem 1rem;
+        border-radius: 0;
     }
 
     h1 {
         font-size: 1.8rem;
+    }
+
+    .tabs-selector {
+        width: 100%;
+        gap: 5px;
+        justify-content: stretch;
+        padding: 4px;
+        box-sizing: border-box;
+    }
+
+    .tab-btn,
+    .time-btn {
+        padding: 8px 12px;
+        font-size: 0.8rem;
+        flex: 1 1 auto;
+        min-width: 100px;
+        text-align: center;
+    }
+
+    .filter-controls {
+        padding: 15px;
+        gap: 15px;
+    }
+
+    .stats-dashboard {
+        grid-template-columns: 1fr;
     }
 }
