@@ -278,8 +278,15 @@ def scrape_google_gold_price():
                         last_error = "Could not parse price from Google card"
                         continue
 
-                    price_per_gram = int(round(price / grams))
-                    results["rates"] = {"24K": str(price_per_gram)}
+                    price_per_gram_24k = int(round(price / grams))
+                    price_per_gram_22k = int(round(price_per_gram_24k * 22 / 24))
+                    price_per_gram_18k = int(round(price_per_gram_24k * 18 / 24))
+
+                    results["rates"] = {
+                        "24K": str(price_per_gram_24k),
+                        "22K": str(price_per_gram_22k),
+                        "18K": str(price_per_gram_18k),
+                    }
                     results["success"] = True
 
                     scraped_date = _parse_google_date(body_text)
