@@ -44,11 +44,20 @@ header p {
     margin-top: 0.5rem;
 }
 
-.filter-container {
+.chart-container {
+    background: #1a1a1a;
+    padding: 20px;
+    border-radius: 12px;
+    border: 1px solid #333;
+    margin-bottom: 30px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.filter-controls {
     margin-bottom: 25px;
     display: flex;
-    flex-direction: column;
-    gap: 12px;
+    flex-wrap: wrap;
+    gap: 20px;
     background: #1a1a1a;
     padding: 20px;
     border-radius: 12px;
@@ -56,12 +65,18 @@ header p {
     box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.5);
 }
 
+.filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
 .filter-label {
-    font-size: 0.9rem;
-    color: #888;
+    font-size: 0.8rem;
+    color: #666;
     text-transform: uppercase;
     letter-spacing: 1px;
-    font-weight: 600;
+    font-weight: 700;
 }
 
 .tabs-selector {
@@ -90,14 +105,73 @@ header p {
     background: rgba(212, 175, 55, 0.1);
 }
 
-.tab-btn.active {
+.tab-btn.active,
+.time-btn.active {
     background: var(--primary-color);
     color: #121212;
     box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
 }
 
+.time-btn {
+    background: transparent;
+    border: none;
+    color: #888;
+    padding: 10px 18px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.time-btn:hover {
+    color: #fff;
+    background: rgba(212, 175, 55, 0.1);
+}
+
 main {
     margin-top: 2rem;
+}
+
+/* Custom Range Picker Styles */
+.range-inputs {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: #252525;
+    padding: 6px 12px;
+    border-radius: 10px;
+    width: fit-content;
+}
+
+.date-input {
+    background: transparent;
+    border: none;
+    color: var(--text-color);
+    font-family: 'Inter', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 500;
+    padding: 5px;
+    cursor: pointer;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+.date-input::-webkit-calendar-picker-indicator {
+    filter: invert(0.7) sepia(1) saturate(5) hue-rotate(10deg);
+    /* Gold-ish tint */
+    cursor: pointer;
+}
+
+.date-input:hover {
+    color: var(--primary-color);
+}
+
+.range-separator {
+    color: #666;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
 }
 
 footer {

@@ -10,6 +10,8 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.dataTables.min.css">
     <link rel="stylesheet" href="styles.css">
     <link rel="icon" type="image/png" href="favicon.png">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
 <body>
@@ -20,13 +22,37 @@
         </header>
 
         <main>
-            <div class="filter-container">
-                <span class="filter-label">Filter by Purity:</span>
-                <div class="tabs-selector" id="purity-tabs">
-                    <button class="tab-btn active" data-purity="24K">24K</button>
-                    <button class="tab-btn" data-purity="22K">22K</button>
-                    <button class="tab-btn" data-purity="18K">18K</button>
+            <div class="filter-controls">
+                <div class="filter-group">
+                    <span class="filter-label">Purity:</span>
+                    <div class="tabs-selector" id="purity-tabs">
+                        <button class="tab-btn active" data-purity="24K">24K</button>
+                        <button class="tab-btn" data-purity="22K">22K</button>
+                        <button class="tab-btn" data-purity="18K">18K</button>
+                    </div>
                 </div>
+                <div class="filter-group">
+                    <span class="filter-label">Time Range:</span>
+                    <div class="tabs-selector" id="time-tabs">
+                        <button class="time-btn active" data-range="this-month">This Month</button>
+                        <button class="time-btn" data-range="last-month">Last Month</button>
+                        <button class="time-btn" data-range="this-year">This Year</button>
+                        <button class="time-btn" data-range="all">All Time</button>
+                        <button class="time-btn" data-range="custom">Custom</button>
+                    </div>
+                </div>
+                <div class="filter-group" id="custom-range-picker" style="display: none;">
+                    <span class="filter-label">Range:</span>
+                    <div class="range-inputs">
+                        <input type="date" id="start-date" class="date-input">
+                        <span class="range-separator">to</span>
+                        <input type="date" id="end-date" class="date-input">
+                    </div>
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <canvas id="gold-price-chart"></canvas>
             </div>
             <table id="gold-prices-table" class="display responsive nowrap" style="width:100%">
                 <thead>
