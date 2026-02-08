@@ -293,7 +293,8 @@ $(document).ready(function () {
         const colors = {
             'Tanishq': { border: '#d4af37', bg: 'rgba(212, 175, 55, 0.1)' },
             'Malabar Gold & Diamonds': { border: '#4ecdc4', bg: 'rgba(78, 205, 196, 0.1)' },
-            'Google': { border: '#3498db', bg: 'rgba(52, 152, 219, 0.1)' }
+            'Google': { border: '#3498db', bg: 'rgba(52, 152, 219, 0.1)' },
+            'GRT Jewels': { border: '#9b59b6', bg: 'rgba(155, 89, 182, 0.1)' }
         };
 
         const ctx = document.getElementById('gold-price-chart').getContext('2d');
@@ -311,6 +312,8 @@ $(document).ready(function () {
             gradient.addColorStop(0, colorSet.bg.replace('0.1', '0.2'));
             gradient.addColorStop(1, 'rgba(18, 18, 18, 0)');
 
+            const hasSinglePoint = sourceData.filter(d => d !== null).length === 1;
+
             return {
                 label: source,
                 data: sourceData,
@@ -319,7 +322,7 @@ $(document).ready(function () {
                 fill: true,
                 tension: 0.4, // Smoothed lines
                 cubicInterpolationMode: 'monotone',
-                pointRadius: 0, // Hide points by default for "Google-look"
+                pointRadius: hasSinglePoint ? 4 : 0, // Show points if single data point, else hide by default for "Google-look"
                 pointHoverRadius: 5,
                 pointBackgroundColor: colorSet.border,
                 pointBorderColor: '#fff',
