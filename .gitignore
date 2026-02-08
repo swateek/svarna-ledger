@@ -4,5 +4,10 @@
 !.pre-commit-config.yaml
 !.agent
 
+# Python
 *.pyc
 *.egg-info
+
+# Scraper debug files
+debug_*
+inspect_output.txt
