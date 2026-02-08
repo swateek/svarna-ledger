@@ -400,6 +400,56 @@ def display_results(results):
         print(f"  Error: {results['error']}")
 
 
+def scrape_grt_gold_price():
+    """Scrape gold prices from GRT Jewels website."""
+    results = {"source": "GRT Jewels", "success": False, "rates": {}, "error": None}
+
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
+    }
+
+    try:
+        response = requests.get(
+            "https://www.grtjewels.com/", headers=headers, timeout=20
+        )
+        response.raise_for_status()
+
+        # Extract gold_rate JSON from HTML
+        # Note: The JSON uses escaped quotes \"key\": value
+        match = re.search(r'\\"gold_rate\\":\s*(\[.*?\])', response.text)
+        if match:
+            # Clean the extracted string by unescaping quotes
+            cleaned_json = match.group(1).replace(r"\"", '"')
+            gold_rates = json.loads(cleaned_json)
+
+            for rate in gold_rates:
+                if rate.get("type") == "GOLD" and rate.get("unit") == "G":
+                    purity_str = rate.get("purity")  # e.g., "22 KT", "24 KT"
+                    amount = rate.get("amount")
+
+                    if purity_str and amount:
+                        # Convert "22 KT" -> "22K"
+                        karat = purity_str.replace(" KT", "K").strip()
+                        results["rates"][karat] = str(amount)
+
+            if results["rates"]:
+                results["success"] = True
+            else:
+                results["error"] = "No gold rates found in parsed JSON"
+        else:
+            results["error"] = "Could not find gold_rate JSON in HTML"
+
+    except requests.RequestException as e:
+        results["error"] = f"Request failed: {str(e)}"
+    except json.JSONDecodeError as e:
+        results["error"] = f"Failed to parse JSON: {str(e)}"
+    except Exception as e:
+        results["error"] = str(e)
+
+    return results
+
+
 def scrape_gold_price():
     """Main function to scrape gold prices from all sources in parallel."""
     from concurrent.futures import ThreadPoolExecutor, as_completed
@@ -408,6 +458,7 @@ def scrape_gold_price():
     scrapers = [
         # ("Tanishq", scrape_tanishq_gold_price),
         ("Malabar Gold & Diamonds", scrape_malabar_gold_price),
+        ("GRT Jewels", scrape_grt_gold_price),
         ("Google", scrape_google_gold_price),
     ]
 
