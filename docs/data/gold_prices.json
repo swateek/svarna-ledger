@@ -2128,5 +2128,35 @@
     "created_by": "gold-bot@users.noreply.github.com",
     "modified_dt": null,
     "modified_by": null
+  },
+  {
+    "source": "Malabar Gold & Diamonds",
+    "date": "2026-03-01",
+    "purity": "22K",
+    "price_per_gm": 15865,
+    "created_dt": "2026-03-01T18:44:58.283028+05:30",
+    "created_by": "gold-bot@users.noreply.github.com",
+    "modified_dt": null,
+    "modified_by": null
+  },
+  {
+    "source": "Malabar Gold & Diamonds",
+    "date": "2026-03-01",
+    "purity": "18K",
+    "price_per_gm": 12980,
+    "created_dt": "2026-03-01T18:44:58.283028+05:30",
+    "created_by": "gold-bot@users.noreply.github.com",
+    "modified_dt": null,
+    "modified_by": null
+  },
+  {
+    "source": "Malabar Gold & Diamonds",
+    "date": "2026-03-01",
+    "purity": "24K",
+    "price_per_gm": 17307,
+    "created_dt": "2026-03-01T18:44:58.283028+05:30",
+    "created_by": "gold-bot@users.noreply.github.com",
+    "modified_dt": null,
+    "modified_by": null
   }
 ]
