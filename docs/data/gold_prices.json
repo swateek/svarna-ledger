@@ -2728,5 +2728,35 @@
     "created_by": "gold-bot@users.noreply.github.com",
     "modified_dt": "2026-03-12T19:11:46.199955+05:30",
     "modified_by": "gold-bot@users.noreply.github.com"
+  },
+  {
+    "source": "Google",
+    "date": "2026-03-13",
+    "purity": "24K",
+    "price_per_gm": 16589,
+    "created_dt": "2026-03-13T08:43:47.447295+05:30",
+    "created_by": "gold-bot@users.noreply.github.com",
+    "modified_dt": null,
+    "modified_by": null
+  },
+  {
+    "source": "Google",
+    "date": "2026-03-13",
+    "purity": "22K",
+    "price_per_gm": 15207,
+    "created_dt": "2026-03-13T08:43:47.447295+05:30",
+    "created_by": "gold-bot@users.noreply.github.com",
+    "modified_dt": null,
+    "modified_by": null
+  },
+  {
+    "source": "Google",
+    "date": "2026-03-13",
+    "purity": "18K",
+    "price_per_gm": 12442,
+    "created_dt": "2026-03-13T08:43:47.447295+05:30",
+    "created_by": "gold-bot@users.noreply.github.com",
+    "modified_dt": null,
+    "modified_by": null
   }
 ]
