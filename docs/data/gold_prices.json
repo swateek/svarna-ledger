@@ -2733,28 +2733,58 @@
     "source": "Google",
     "date": "2026-03-13",
     "purity": "24K",
-    "price_per_gm": 16589,
+    "price_per_gm": 16378,
     "created_dt": "2026-03-13T08:43:47.447295+05:30",
     "created_by": "gold-bot@users.noreply.github.com",
-    "modified_dt": null,
-    "modified_by": null
+    "modified_dt": "2026-03-13T12:58:45.146502+05:30",
+    "modified_by": "gold-bot@users.noreply.github.com"
   },
   {
     "source": "Google",
     "date": "2026-03-13",
     "purity": "22K",
-    "price_per_gm": 15207,
+    "price_per_gm": 15013,
     "created_dt": "2026-03-13T08:43:47.447295+05:30",
     "created_by": "gold-bot@users.noreply.github.com",
-    "modified_dt": null,
-    "modified_by": null
+    "modified_dt": "2026-03-13T12:58:45.146502+05:30",
+    "modified_by": "gold-bot@users.noreply.github.com"
   },
   {
     "source": "Google",
     "date": "2026-03-13",
     "purity": "18K",
-    "price_per_gm": 12442,
+    "price_per_gm": 12284,
     "created_dt": "2026-03-13T08:43:47.447295+05:30",
+    "created_by": "gold-bot@users.noreply.github.com",
+    "modified_dt": "2026-03-13T12:58:45.146502+05:30",
+    "modified_by": "gold-bot@users.noreply.github.com"
+  },
+  {
+    "source": "Malabar Gold & Diamonds",
+    "date": "2026-03-13",
+    "purity": "22K",
+    "price_per_gm": 14780,
+    "created_dt": "2026-03-13T12:58:45.146502+05:30",
+    "created_by": "gold-bot@users.noreply.github.com",
+    "modified_dt": null,
+    "modified_by": null
+  },
+  {
+    "source": "Malabar Gold & Diamonds",
+    "date": "2026-03-13",
+    "purity": "18K",
+    "price_per_gm": 12093,
+    "created_dt": "2026-03-13T12:58:45.146502+05:30",
+    "created_by": "gold-bot@users.noreply.github.com",
+    "modified_dt": null,
+    "modified_by": null
+  },
+  {
+    "source": "Malabar Gold & Diamonds",
+    "date": "2026-03-13",
+    "purity": "24K",
+    "price_per_gm": 16124,
+    "created_dt": "2026-03-13T12:58:45.146502+05:30",
     "created_by": "gold-bot@users.noreply.github.com",
     "modified_dt": null,
     "modified_by": null
