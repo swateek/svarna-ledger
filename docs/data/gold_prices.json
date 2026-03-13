@@ -2733,60 +2733,60 @@
     "source": "Google",
     "date": "2026-03-13",
     "purity": "24K",
-    "price_per_gm": 16378,
+    "price_per_gm": 16399,
     "created_dt": "2026-03-13T08:43:47.447295+05:30",
     "created_by": "gold-bot@users.noreply.github.com",
-    "modified_dt": "2026-03-13T12:58:45.146502+05:30",
+    "modified_dt": "2026-03-13T19:09:33.557897+05:30",
     "modified_by": "gold-bot@users.noreply.github.com"
   },
   {
     "source": "Google",
     "date": "2026-03-13",
     "purity": "22K",
-    "price_per_gm": 15013,
+    "price_per_gm": 15032,
     "created_dt": "2026-03-13T08:43:47.447295+05:30",
     "created_by": "gold-bot@users.noreply.github.com",
-    "modified_dt": "2026-03-13T12:58:45.146502+05:30",
+    "modified_dt": "2026-03-13T19:09:33.557897+05:30",
     "modified_by": "gold-bot@users.noreply.github.com"
   },
   {
     "source": "Google",
     "date": "2026-03-13",
     "purity": "18K",
-    "price_per_gm": 12284,
+    "price_per_gm": 12299,
     "created_dt": "2026-03-13T08:43:47.447295+05:30",
     "created_by": "gold-bot@users.noreply.github.com",
-    "modified_dt": "2026-03-13T12:58:45.146502+05:30",
+    "modified_dt": "2026-03-13T19:09:33.557897+05:30",
     "modified_by": "gold-bot@users.noreply.github.com"
   },
   {
     "source": "Malabar Gold & Diamonds",
     "date": "2026-03-13",
     "purity": "22K",
-    "price_per_gm": 14780,
+    "price_per_gm": 14730,
     "created_dt": "2026-03-13T12:58:45.146502+05:30",
     "created_by": "gold-bot@users.noreply.github.com",
-    "modified_dt": null,
-    "modified_by": null
+    "modified_dt": "2026-03-13T19:09:33.557897+05:30",
+    "modified_by": "gold-bot@users.noreply.github.com"
   },
   {
     "source": "Malabar Gold & Diamonds",
     "date": "2026-03-13",
     "purity": "18K",
-    "price_per_gm": 12093,
+    "price_per_gm": 12052,
     "created_dt": "2026-03-13T12:58:45.146502+05:30",
     "created_by": "gold-bot@users.noreply.github.com",
-    "modified_dt": null,
-    "modified_by": null
+    "modified_dt": "2026-03-13T19:09:33.557897+05:30",
+    "modified_by": "gold-bot@users.noreply.github.com"
   },
   {
     "source": "Malabar Gold & Diamonds",
     "date": "2026-03-13",
     "purity": "24K",
-    "price_per_gm": 16124,
+    "price_per_gm": 16069,
     "created_dt": "2026-03-13T12:58:45.146502+05:30",
     "created_by": "gold-bot@users.noreply.github.com",
-    "modified_dt": null,
-    "modified_by": null
+    "modified_dt": "2026-03-13T19:09:33.557897+05:30",
+    "modified_by": "gold-bot@users.noreply.github.com"
   }
 ]
