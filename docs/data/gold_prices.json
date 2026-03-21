@@ -3123,30 +3123,60 @@
     "source": "Google",
     "date": "2026-03-20",
     "purity": "24K",
-    "price_per_gm": 15160,
+    "price_per_gm": 15228,
     "created_dt": "2026-03-20T12:59:47.218041+05:30",
     "created_by": "gold-bot@users.noreply.github.com",
-    "modified_dt": "2026-03-20T19:09:57.043001+05:30",
+    "modified_dt": "2026-03-21T12:38:22.884108+05:30",
     "modified_by": "gold-bot@users.noreply.github.com"
   },
   {
     "source": "Google",
     "date": "2026-03-20",
     "purity": "22K",
-    "price_per_gm": 13897,
+    "price_per_gm": 13959,
     "created_dt": "2026-03-20T12:59:47.218041+05:30",
     "created_by": "gold-bot@users.noreply.github.com",
-    "modified_dt": "2026-03-20T19:09:57.043001+05:30",
+    "modified_dt": "2026-03-21T12:38:22.884108+05:30",
     "modified_by": "gold-bot@users.noreply.github.com"
   },
   {
     "source": "Google",
     "date": "2026-03-20",
     "purity": "18K",
-    "price_per_gm": 11370,
+    "price_per_gm": 11421,
     "created_dt": "2026-03-20T12:59:47.218041+05:30",
     "created_by": "gold-bot@users.noreply.github.com",
-    "modified_dt": "2026-03-20T19:09:57.043001+05:30",
+    "modified_dt": "2026-03-21T12:38:22.884108+05:30",
     "modified_by": "gold-bot@users.noreply.github.com"
+  },
+  {
+    "source": "Malabar Gold & Diamonds",
+    "date": "2026-03-21",
+    "purity": "22K",
+    "price_per_gm": 13380,
+    "created_dt": "2026-03-21T12:38:22.884108+05:30",
+    "created_by": "gold-bot@users.noreply.github.com",
+    "modified_dt": null,
+    "modified_by": null
+  },
+  {
+    "source": "Malabar Gold & Diamonds",
+    "date": "2026-03-21",
+    "purity": "18K",
+    "price_per_gm": 10947,
+    "created_dt": "2026-03-21T12:38:22.884108+05:30",
+    "created_by": "gold-bot@users.noreply.github.com",
+    "modified_dt": null,
+    "modified_by": null
+  },
+  {
+    "source": "Malabar Gold & Diamonds",
+    "date": "2026-03-21",
+    "purity": "24K",
+    "price_per_gm": 14596,
+    "created_dt": "2026-03-21T12:38:22.884108+05:30",
+    "created_by": "gold-bot@users.noreply.github.com",
+    "modified_dt": null,
+    "modified_by": null
   }
 ]
