@@ -4108,5 +4108,65 @@
     "created_by": "gold-bot@users.noreply.github.com",
     "modified_dt": "2026-04-10T19:24:47.203863+05:30",
     "modified_by": "gold-bot@users.noreply.github.com"
+  },
+  {
+    "source": "Malabar Gold & Diamonds",
+    "date": "2026-04-11",
+    "purity": "22K",
+    "price_per_gm": 14010,
+    "created_dt": "2026-04-11T13:03:51.297341+05:30",
+    "created_by": "gold-bot@users.noreply.github.com",
+    "modified_dt": null,
+    "modified_by": null
+  },
+  {
+    "source": "Malabar Gold & Diamonds",
+    "date": "2026-04-11",
+    "purity": "18K",
+    "price_per_gm": 11463,
+    "created_dt": "2026-04-11T13:03:51.297341+05:30",
+    "created_by": "gold-bot@users.noreply.github.com",
+    "modified_dt": null,
+    "modified_by": null
+  },
+  {
+    "source": "Malabar Gold & Diamonds",
+    "date": "2026-04-11",
+    "purity": "24K",
+    "price_per_gm": 15284,
+    "created_dt": "2026-04-11T13:03:51.297341+05:30",
+    "created_by": "gold-bot@users.noreply.github.com",
+    "modified_dt": null,
+    "modified_by": null
+  },
+  {
+    "source": "Google",
+    "date": "2026-04-11",
+    "purity": "24K",
+    "price_per_gm": 15542,
+    "created_dt": "2026-04-11T13:03:51.297341+05:30",
+    "created_by": "gold-bot@users.noreply.github.com",
+    "modified_dt": null,
+    "modified_by": null
+  },
+  {
+    "source": "Google",
+    "date": "2026-04-11",
+    "purity": "22K",
+    "price_per_gm": 14247,
+    "created_dt": "2026-04-11T13:03:51.297341+05:30",
+    "created_by": "gold-bot@users.noreply.github.com",
+    "modified_dt": null,
+    "modified_by": null
+  },
+  {
+    "source": "Google",
+    "date": "2026-04-11",
+    "purity": "18K",
+    "price_per_gm": 11656,
+    "created_dt": "2026-04-11T13:03:51.297341+05:30",
+    "created_by": "gold-bot@users.noreply.github.com",
+    "modified_dt": null,
+    "modified_by": null
   }
 ]
