@@ -5463,60 +5463,60 @@
     "source": "GRT Jewels",
     "date": "2026-05-11",
     "purity": "24K",
-    "price_per_gm": 15224,
+    "price_per_gm": 15355,
     "created_dt": "2026-05-11T01:12:24.399645+05:30",
     "created_by": "gold-bot@users.noreply.github.com",
-    "modified_dt": "2026-05-11T15:36:55.458778+05:30",
+    "modified_dt": "2026-05-11T21:14:30.352734+05:30",
     "modified_by": "gold-bot@users.noreply.github.com"
   },
   {
     "source": "GRT Jewels",
     "date": "2026-05-11",
     "purity": "22K",
-    "price_per_gm": 13945,
+    "price_per_gm": 14065,
     "created_dt": "2026-05-11T01:12:24.399645+05:30",
     "created_by": "gold-bot@users.noreply.github.com",
-    "modified_dt": "2026-05-11T15:36:55.458778+05:30",
+    "modified_dt": "2026-05-11T21:14:30.352734+05:30",
     "modified_by": "gold-bot@users.noreply.github.com"
   },
   {
     "source": "GRT Jewels",
     "date": "2026-05-11",
     "purity": "18K",
-    "price_per_gm": 11418,
+    "price_per_gm": 11516,
     "created_dt": "2026-05-11T01:12:24.399645+05:30",
     "created_by": "gold-bot@users.noreply.github.com",
-    "modified_dt": "2026-05-11T15:36:55.458778+05:30",
+    "modified_dt": "2026-05-11T21:14:30.352734+05:30",
     "modified_by": "gold-bot@users.noreply.github.com"
   },
   {
     "source": "Google",
     "date": "2026-05-11",
     "purity": "24K",
-    "price_per_gm": 15516,
+    "price_per_gm": 15492,
     "created_dt": "2026-05-11T15:36:55.458778+05:30",
     "created_by": "gold-bot@users.noreply.github.com",
-    "modified_dt": null,
-    "modified_by": null
+    "modified_dt": "2026-05-11T21:14:30.352734+05:30",
+    "modified_by": "gold-bot@users.noreply.github.com"
   },
   {
     "source": "Google",
     "date": "2026-05-11",
     "purity": "22K",
-    "price_per_gm": 14223,
+    "price_per_gm": 14201,
     "created_dt": "2026-05-11T15:36:55.458778+05:30",
     "created_by": "gold-bot@users.noreply.github.com",
-    "modified_dt": null,
-    "modified_by": null
+    "modified_dt": "2026-05-11T21:14:30.352734+05:30",
+    "modified_by": "gold-bot@users.noreply.github.com"
   },
   {
     "source": "Google",
     "date": "2026-05-11",
     "purity": "18K",
-    "price_per_gm": 11637,
+    "price_per_gm": 11619,
     "created_dt": "2026-05-11T15:36:55.458778+05:30",
     "created_by": "gold-bot@users.noreply.github.com",
-    "modified_dt": null,
-    "modified_by": null
+    "modified_dt": "2026-05-11T21:14:30.352734+05:30",
+    "modified_by": "gold-bot@users.noreply.github.com"
   }
 ]
