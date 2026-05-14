@@ -5643,28 +5643,58 @@
     "source": "GRT Jewels",
     "date": "2026-05-14",
     "purity": "24K",
-    "price_per_gm": 16146,
+    "price_per_gm": 16157,
     "created_dt": "2026-05-14T01:48:02.062546+05:30",
     "created_by": "gold-bot@users.noreply.github.com",
-    "modified_dt": null,
-    "modified_by": null
+    "modified_dt": "2026-05-14T14:44:57.205958+05:30",
+    "modified_by": "gold-bot@users.noreply.github.com"
   },
   {
     "source": "GRT Jewels",
     "date": "2026-05-14",
     "purity": "22K",
-    "price_per_gm": 14790,
+    "price_per_gm": 14800,
     "created_dt": "2026-05-14T01:48:02.062546+05:30",
     "created_by": "gold-bot@users.noreply.github.com",
-    "modified_dt": null,
-    "modified_by": null
+    "modified_dt": "2026-05-14T14:44:57.205958+05:30",
+    "modified_by": "gold-bot@users.noreply.github.com"
   },
   {
     "source": "GRT Jewels",
     "date": "2026-05-14",
     "purity": "18K",
-    "price_per_gm": 12110,
+    "price_per_gm": 12118,
     "created_dt": "2026-05-14T01:48:02.062546+05:30",
+    "created_by": "gold-bot@users.noreply.github.com",
+    "modified_dt": "2026-05-14T14:44:57.205958+05:30",
+    "modified_by": "gold-bot@users.noreply.github.com"
+  },
+  {
+    "source": "Google",
+    "date": "2026-05-14",
+    "purity": "24K",
+    "price_per_gm": 16616,
+    "created_dt": "2026-05-14T14:44:57.205958+05:30",
+    "created_by": "gold-bot@users.noreply.github.com",
+    "modified_dt": null,
+    "modified_by": null
+  },
+  {
+    "source": "Google",
+    "date": "2026-05-14",
+    "purity": "22K",
+    "price_per_gm": 15231,
+    "created_dt": "2026-05-14T14:44:57.205958+05:30",
+    "created_by": "gold-bot@users.noreply.github.com",
+    "modified_dt": null,
+    "modified_by": null
+  },
+  {
+    "source": "Google",
+    "date": "2026-05-14",
+    "purity": "18K",
+    "price_per_gm": 12462,
+    "created_dt": "2026-05-14T14:44:57.205958+05:30",
     "created_by": "gold-bot@users.noreply.github.com",
     "modified_dt": null,
     "modified_by": null
