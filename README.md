@@ -1,6 +1,7 @@
 # SvarṇaLedger (svarna-ledger)
 
 [![Scrape Gold Prices](https://github.com/swateek/svarna-ledger/actions/workflows/scrape.yml/badge.svg)](https://github.com/swateek/svarna-ledger/actions/workflows/scrape.yml)
+[![Deploy GitHub Pages](https://github.com/swateek/svarna-ledger/actions/workflows/pages.yml/badge.svg)](https://github.com/swateek/svarna-ledger/actions/workflows/pages.yml)
 
 SvarṇaLedger is a transparent, append-only tracker of daily gold prices in India. It scrapes jeweller and reference sources on a schedule via GitHub Actions and publishes searchable tables and historical charts using a static GitHub Pages site backed by Supabase.
 
@@ -18,7 +19,7 @@ SvarṇaLedger is a transparent, append-only tracker of daily gold prices in Ind
 1. **Scraper (Python)**: Fetches prices via `requests`, BeautifulSoup, and Selenium; upserts to Supabase.
 2. **Data Storage**: Supabase Postgres with public read-only RLS for the frontend.
 3. **Frontend**: Static HTML/JS on GitHub Pages; reads data via the Supabase JS client (anon key).
-4. **Automation**: GitHub Actions runs the scraper with `SUPABASE_URL` and `SUPABASE_SECRET_KEY` secrets.
+4. **Automation**: GitHub Actions runs the scraper and deploys the frontend; Supabase credentials come from repository secrets.
 
 ## For Developers
 
@@ -46,7 +47,11 @@ SvarṇaLedger is a transparent, append-only tracker of daily gold prices in Ind
 
 4. Configure environment — copy `scripts/backfill-prices/env.example` to `.env` in the repo root, `scraper/`, or `scripts/backfill-prices/` (any of these paths work). Fill in `SUPABASE_URL`, `SUPABASE_SECRET_KEY`, and `SUPABASE_PUBLISHABLE_KEY` (from Dashboard → API: **Secret** and **Publishable** keys).
 
-5. Configure the frontend — set `SUPABASE_URL` and `SUPABASE_PUBLISHABLE_KEY` in [`docs/config.js`](docs/config.js).
+5. Configure the frontend for local dev:
+   ```bash
+   cp docs/config.js.example docs/config.js
+   ```
+   Edit `docs/config.js` with your `SUPABASE_URL` and `SUPABASE_PUBLISHABLE_KEY` (from Dashboard → API). Production builds inject these from GitHub Actions secrets (see below).
 
 ### One-time migration (import historical data)
 
@@ -69,25 +74,41 @@ uv run python scrape_gold.py
 
 ### Running the Frontend Locally
 
+Requires `docs/config.js` (copy from `docs/config.js.example` and fill in Supabase values):
+
 ```bash
+cp docs/config.js.example docs/config.js
+# edit docs/config.js, then:
 python3 -m http.server -d docs 8000
 ```
 
 Then visit `http://localhost:8000`.
+
+### GitHub Pages deployment
+
+The site is deployed by [`.github/workflows/pages.yml`](.github/workflows/pages.yml) on pushes to `main` that touch `docs/` or the workflow file.
+
+**One-time setup:**
+
+1. **Settings → Pages → Build and deployment → Source:** select **GitHub Actions** (not “Deploy from a branch”).
+2. Ensure repository secrets are set (see below), including `SUPABASE_PUBLISHABLE_KEY` for the frontend.
+
+After merging to `main`, open the [Deploy GitHub Pages](https://github.com/swateek/svarna-ledger/actions/workflows/pages.yml) workflow run to confirm success, then verify [the live site](https://swateek.github.io/svarna-ledger/).
 
 ### GitHub Actions secrets
 
 Add these repository secrets (Settings → Secrets → Actions):
 
 - `SUPABASE_URL`
-- `SUPABASE_SECRET_KEY`
+- `SUPABASE_SECRET_KEY` (scraper / backfill)
+- `SUPABASE_PUBLISHABLE_KEY` (GitHub Pages frontend; publishable or anon key with read-only RLS)
 
 ## Project Structure
 
-- `.github/workflows/`: Scheduled scraper workflow.
+- `.github/workflows/`: Scraper schedule and GitHub Pages deploy.
 - `scraper/`: Python scrapers, Supabase client helper, and `pyproject.toml` for daily scraping.
 - `scripts/backfill-prices/`: Separate `pyproject.toml` for one-time backfill/migration, seed data, and SQL schema (`migrations/`).
-- `docs/`: Frontend (GitHub Pages) and `config.js` for Supabase anon key.
+- `docs/`: Frontend (GitHub Pages); `config.js.example` for local dev, `config.js` generated at deploy (gitignored).
 
 ## License
 

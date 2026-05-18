@@ -40,7 +40,8 @@ $(document).ready(function () {
             });
     }
 
-    const table = $('#gold-prices-table').DataTable({
+    let table;
+    $('#gold-prices-table').DataTable({
         ajax: function (_data, callback, _settings) {
             fetchGoldPrices(callback);
         },
@@ -72,6 +73,7 @@ $(document).ready(function () {
         pageLength: 10,
         lengthMenu: [5, 10, 25, 50],
         initComplete: function () {
+            table = this.api();
             initChart(goldData);
             refreshView();
         }

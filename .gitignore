@@ -11,3 +11,6 @@
 # Scraper debug files
 debug_*
 inspect_output.txt
+
+# Frontend Supabase config (generated locally or by Pages deploy)
+docs/config.js
