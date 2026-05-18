@@ -281,11 +281,13 @@ def scrape_google_gold_price():
                     price_per_gram_24k = int(round(price / grams))
                     price_per_gram_22k = int(round(price_per_gram_24k * 22 / 24))
                     price_per_gram_18k = int(round(price_per_gram_24k * 18 / 24))
+                    price_per_gram_9k = int(round(price_per_gram_24k * 9 / 24))
 
                     results["rates"] = {
                         "24K": str(price_per_gram_24k),
                         "22K": str(price_per_gram_22k),
                         "18K": str(price_per_gram_18k),
+                        "9K": str(price_per_gram_9k),
                     }
                     results["success"] = True
 
@@ -399,7 +401,7 @@ def display_results(results):
 
     if results["success"]:
         # Display rates in a consistent order
-        for karat in ["24K", "22K", "18K", "14K"]:
+        for karat in ["24K", "22K", "18K", "9K", "14K"]:
             if karat in results["rates"]:
                 price = results["rates"][karat]
                 print(f"  {karat}: ₹{price}")
@@ -519,7 +521,7 @@ def scrape_gold_price():
     bot_email = "gold-bot@users.noreply.github.com"
 
     allowed_purities = ["24K", "22K", "18K", "9K"]
-    derived_ratios = {"22K": 22 / 24, "18K": 18 / 24, "9K": 9 / 24}
+    derived_ratios = {"22K": 22 / 24, "18K": 18 / 24}
 
     client = get_client()
     existing_rows: dict[tuple[str, str, str], dict] = {}
@@ -544,6 +546,7 @@ def scrape_gold_price():
 
     pending: dict[tuple[str, str, str], dict] = {}
     price_24k_by_source_date: dict[tuple[str, str], int] = {}
+    directly_scraped: set[tuple[str, str, str]] = set()
 
     for result in all_results:
         if not result.get("success"):
@@ -560,6 +563,7 @@ def scrape_gold_price():
                 continue
 
             key = (source, scraping_date, purity)
+            directly_scraped.add(key)
             if purity == "24K":
                 price_24k_by_source_date[(source, scraping_date)] = new_price
 
@@ -587,6 +591,37 @@ def scrape_gold_price():
                     "modified_dt": None,
                     "modified_by": None,
                 }
+
+    for (source, scraping_date), price_24k in price_24k_by_source_date.items():
+        key = (source, scraping_date, "9K")
+        if key in directly_scraped:
+            continue
+
+        price_9k = round(price_24k * (9 / 24))
+        if key in existing_rows:
+            if existing_rows[key]["price_per_gm"] != price_9k:
+                row = existing_rows[key]
+                pending[key] = {
+                    "source": source,
+                    "date": scraping_date,
+                    "purity": "9K",
+                    "price_per_gm": price_9k,
+                    "created_dt": row["created_dt"],
+                    "created_by": row["created_by"],
+                    "modified_dt": now_iso,
+                    "modified_by": bot_email,
+                }
+        else:
+            pending[key] = {
+                "source": source,
+                "date": scraping_date,
+                "purity": "9K",
+                "price_per_gm": price_9k,
+                "created_dt": now_iso,
+                "created_by": bot_email,
+                "modified_dt": None,
+                "modified_by": None,
+            }
 
     for (source, scraping_date), price_24k in price_24k_by_source_date.items():
         for purity, ratio in derived_ratios.items():

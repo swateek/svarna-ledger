@@ -1,4 +1,5 @@
 // From Supabase Dashboard → Project Settings → API
 // Publishable key (sb_publishable_...) — safe to commit when RLS only allows SELECT.
+// Copy to config.js for local dev: cp docs/config.js.example docs/config.js
 window.SUPABASE_URL = 'https://xxxx.supabase.co';
 window.SUPABASE_PUBLISHABLE_KEY = '';
