@@ -5883,31 +5883,31 @@
     "source": "GRT Jewels",
     "date": "2026-05-18",
     "purity": "24K",
-    "price_per_gm": 15704,
+    "price_per_gm": 15633,
     "created_dt": "2026-05-18T01:15:09.074353+05:30",
     "created_by": "gold-bot@users.noreply.github.com",
-    "modified_dt": null,
-    "modified_by": null
+    "modified_dt": "2026-05-18T12:15:55.311292+05:30",
+    "modified_by": "gold-bot@users.noreply.github.com"
   },
   {
     "source": "GRT Jewels",
     "date": "2026-05-18",
     "purity": "22K",
-    "price_per_gm": 14385,
+    "price_per_gm": 14320,
     "created_dt": "2026-05-18T01:15:09.074353+05:30",
     "created_by": "gold-bot@users.noreply.github.com",
-    "modified_dt": null,
-    "modified_by": null
+    "modified_dt": "2026-05-18T12:15:55.311292+05:30",
+    "modified_by": "gold-bot@users.noreply.github.com"
   },
   {
     "source": "GRT Jewels",
     "date": "2026-05-18",
     "purity": "18K",
-    "price_per_gm": 11778,
+    "price_per_gm": 11725,
     "created_dt": "2026-05-18T01:15:09.074353+05:30",
     "created_by": "gold-bot@users.noreply.github.com",
-    "modified_dt": null,
-    "modified_by": null
+    "modified_dt": "2026-05-18T12:15:55.311292+05:30",
+    "modified_by": "gold-bot@users.noreply.github.com"
   },
   {
     "source": "Malabar Gold & Diamonds",
@@ -5965,6 +5965,36 @@
     "purity": "18K",
     "price_per_gm": 11700,
     "created_dt": "2026-05-18T10:20:50.943162+05:30",
+    "created_by": "gold-bot@users.noreply.github.com",
+    "modified_dt": null,
+    "modified_by": null
+  },
+  {
+    "source": "Google",
+    "date": "2026-05-18",
+    "purity": "24K",
+    "price_per_gm": 16266,
+    "created_dt": "2026-05-18T12:15:55.311292+05:30",
+    "created_by": "gold-bot@users.noreply.github.com",
+    "modified_dt": null,
+    "modified_by": null
+  },
+  {
+    "source": "Google",
+    "date": "2026-05-18",
+    "purity": "22K",
+    "price_per_gm": 14910,
+    "created_dt": "2026-05-18T12:15:55.311292+05:30",
+    "created_by": "gold-bot@users.noreply.github.com",
+    "modified_dt": null,
+    "modified_by": null
+  },
+  {
+    "source": "Google",
+    "date": "2026-05-18",
+    "purity": "18K",
+    "price_per_gm": 12200,
+    "created_dt": "2026-05-18T12:15:55.311292+05:30",
     "created_by": "gold-bot@users.noreply.github.com",
     "modified_dt": null,
     "modified_by": null
