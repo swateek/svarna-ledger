@@ -3,3 +3,5 @@
 // Copy to config.js for local dev: cp docs/config.js.example docs/config.js
 window.SUPABASE_URL = 'https://xxxx.supabase.co';
 window.SUPABASE_PUBLISHABLE_KEY = '';
+// Leave empty for local dev (avoids polluting production analytics)
+window.GA_MEASUREMENT_ID = '';
