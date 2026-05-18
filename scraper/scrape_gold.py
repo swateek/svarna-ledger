@@ -312,7 +312,7 @@ MALABAR_METAL_RATE_QUERY = """query getMetalRate($filter: MetalRateFilterInput) 
   }
 }"""
 MALABAR_METAL_RATE_FILTER = {"metal_type": "gold", "country": "India"}
-MALABAR_TARGET_PURITIES = {"24k": "24K", "22k": "22K", "18k": "18K"}
+MALABAR_TARGET_PURITIES = {"24k": "24K", "22k": "22K", "18k": "18K", "9k": "9K"}
 
 
 def scrape_malabar_gold_price():
@@ -511,72 +511,103 @@ def scrape_gold_price():
     successful = sum(1 for r in all_results if r["success"])
     print(f"\nSuccessfully fetched rates from {successful}/{len(all_results)} sources")
 
-    # Update or Append 24K gold prices to JSON file
-    json_path = os.path.join(
-        os.path.dirname(__file__), "..", "docs", "data", "gold_prices.json"
-    )
-    try:
-        with open(json_path, "r", encoding="utf-8") as f:
-            existing = json.load(f)
-    except (FileNotFoundError, json.JSONDecodeError):
-        existing = []
+    from scraper.db import get_client, upsert_gold_prices
 
     now_tz = datetime.now(timezone(timedelta(hours=5, minutes=30)))
     today_iso = now_tz.date().isoformat()
     now_iso = now_tz.isoformat()
     bot_email = "gold-bot@users.noreply.github.com"
 
-    allowed_purities = ["24K", "22K", "18K"]
+    allowed_purities = ["24K", "22K", "18K", "9K"]
+    derived_ratios = {"22K": 22 / 24, "18K": 18 / 24, "9K": 9 / 24}
+
+    client = get_client()
+    existing_rows: dict[tuple[str, str, str], dict] = {}
+    offset = 0
+    page_size = 1000
+    while True:
+        response = (
+            client.table("gold_prices")
+            .select(
+                "source,date,purity,price_per_gm,created_dt,created_by,modified_dt,modified_by"
+            )
+            .range(offset, offset + page_size - 1)
+            .execute()
+        )
+        rows = response.data or []
+        for row in rows:
+            key = (row["source"], row["date"], row["purity"])
+            existing_rows[key] = row
+        if len(rows) < page_size:
+            break
+        offset += page_size
+
+    pending: dict[tuple[str, str, str], dict] = {}
+    price_24k_by_source_date: dict[tuple[str, str], int] = {}
 
     for result in all_results:
-        if result.get("success"):
-            for purity, price_val in result.get("rates", {}).items():
-                if purity not in allowed_purities:
-                    continue
+        if not result.get("success"):
+            continue
+        source = result["source"]
+        scraping_date = result.get("date", today_iso)
 
-                source = result["source"]
-                try:
-                    new_price = int(str(price_val).replace(",", "").split(".")[0])
-                except (ValueError, TypeError):
-                    continue
+        for purity, price_val in result.get("rates", {}).items():
+            if purity not in allowed_purities:
+                continue
+            try:
+                new_price = int(str(price_val).replace(",", "").split(".")[0])
+            except (ValueError, TypeError):
+                continue
 
-                scraping_date = result.get("date", today_iso)
+            key = (source, scraping_date, purity)
+            if purity == "24K":
+                price_24k_by_source_date[(source, scraping_date)] = new_price
 
-                # Search for existing record with same source, date, AND purity
-                found = False
-                for entry in existing:
-                    if (
-                        entry.get("source") == source
-                        and entry.get("date") == scraping_date
-                        and entry.get("purity") == purity
-                    ):
-                        # Update if price changed
-                        if entry.get("price_per_gm") != new_price:
-                            entry["price_per_gm"] = new_price
-                            entry["modified_dt"] = now_iso
-                            entry["modified_by"] = bot_email
-                        found = True
-                        break
-
-                if not found:
-                    # Add new record
-                    entry = {
+            if key in existing_rows:
+                if existing_rows[key]["price_per_gm"] != new_price:
+                    row = existing_rows[key]
+                    pending[key] = {
                         "source": source,
                         "date": scraping_date,
                         "purity": purity,
                         "price_per_gm": new_price,
-                        "created_dt": now_iso,
-                        "created_by": bot_email,
-                        "modified_dt": None,
-                        "modified_by": None,
+                        "created_dt": row["created_dt"],
+                        "created_by": row["created_by"],
+                        "modified_dt": now_iso,
+                        "modified_by": bot_email,
                     }
-                    existing.append(entry)
+            else:
+                pending[key] = {
+                    "source": source,
+                    "date": scraping_date,
+                    "purity": purity,
+                    "price_per_gm": new_price,
+                    "created_dt": now_iso,
+                    "created_by": bot_email,
+                    "modified_dt": None,
+                    "modified_by": None,
+                }
 
-    # Ensure directory exists
-    os.makedirs(os.path.dirname(json_path), exist_ok=True)
+    for (source, scraping_date), price_24k in price_24k_by_source_date.items():
+        for purity, ratio in derived_ratios.items():
+            key = (source, scraping_date, purity)
+            if key in pending or key in existing_rows:
+                continue
+            derived_price = round(price_24k * ratio)
+            pending[key] = {
+                "source": source,
+                "date": scraping_date,
+                "purity": purity,
+                "price_per_gm": derived_price,
+                "created_dt": now_iso,
+                "created_by": bot_email,
+                "modified_dt": None,
+                "modified_by": None,
+            }
 
-    with open(json_path, "w", encoding="utf-8") as f:
-        json.dump(existing, f, ensure_ascii=False, indent=2)
+    if pending:
+        upsert_gold_prices(list(pending.values()))
+        print(f"Upserted {len(pending)} gold price record(s) to Supabase.")
 
     return all_results
 
