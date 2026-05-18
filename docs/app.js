@@ -2,13 +2,47 @@ $(document).ready(function () {
     let priceChart;
     let goldData = [];
 
+    function normalizeRow(row) {
+        const date = row.date;
+        return {
+            ...row,
+            date: typeof date === 'string' ? date.split('T')[0] : date,
+            price_per_gm: Number(row.price_per_gm),
+        };
+    }
+
+    function fetchGoldPrices(callback) {
+        const publishableKey =
+            window.SUPABASE_PUBLISHABLE_KEY || window.SUPABASE_ANON_KEY;
+        if (!window.SUPABASE_URL || !publishableKey) {
+            console.error(
+                'Supabase config missing. Set SUPABASE_URL and SUPABASE_PUBLISHABLE_KEY in config.js'
+            );
+            callback({ data: [] });
+            return;
+        }
+        const client = window.supabase.createClient(
+            window.SUPABASE_URL,
+            publishableKey
+        );
+        client
+            .from('gold_prices')
+            .select('*')
+            .order('date', { ascending: false })
+            .then(function (result) {
+                if (result.error) {
+                    console.error(result.error);
+                    callback({ data: [] });
+                    return;
+                }
+                goldData = (result.data || []).map(normalizeRow);
+                callback({ data: goldData });
+            });
+    }
+
     const table = $('#gold-prices-table').DataTable({
-        ajax: {
-            url: 'data/gold_prices.json',
-            dataSrc: function (json) {
-                goldData = json;
-                return json;
-            }
+        ajax: function (_data, callback, _settings) {
+            fetchGoldPrices(callback);
         },
         columns: [
             { data: 'date' },
@@ -37,8 +71,8 @@ $(document).ready(function () {
         },
         pageLength: 10,
         lengthMenu: [5, 10, 25, 50],
-        initComplete: function (settings, json) {
-            initChart(json);
+        initComplete: function () {
+            initChart(goldData);
             refreshView();
         }
     });

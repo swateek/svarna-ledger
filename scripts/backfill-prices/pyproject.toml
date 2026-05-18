@@ -1,0 +1,15 @@
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "backfill-prices"
+version = "0.1.0"
+description = "One-time backfill and migration utilities for Svarna Ledger"
+requires-python = ">=3.10"
+dependencies = [
+    "svarna-ledger-scraper",
+]
+
+[tool.uv.sources]
+svarna-ledger-scraper = { path = "../../scraper", editable = true }
