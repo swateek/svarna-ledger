@@ -305,8 +305,18 @@ def scrape_google_gold_price():
     return results
 
 
+MALABAR_GRAPHQL_URL = "https://www.malabargoldanddiamonds.com/graphql-magento"
+MALABAR_METAL_RATE_QUERY = """query getMetalRate($filter: MetalRateFilterInput) {
+  getMetalRate(filter: $filter) {
+    items { entry_date entry_time purity unit rate country state }
+  }
+}"""
+MALABAR_METAL_RATE_FILTER = {"metal_type": "gold", "country": "India"}
+MALABAR_TARGET_PURITIES = {"24k": "24K", "22k": "22K", "18k": "18K"}
+
+
 def scrape_malabar_gold_price():
-    """Scrape gold prices from Malabar Gold & Diamonds website."""
+    """Scrape gold prices from Malabar Gold & Diamonds GraphQL API."""
     results = {
         "source": "Malabar Gold & Diamonds",
         "success": False,
@@ -317,65 +327,62 @@ def scrape_malabar_gold_price():
     headers = {
         "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
         "Accept": "application/json",
-        "X-Requested-With": "XMLHttpRequest",
         "Referer": "https://www.malabargoldanddiamonds.com/",
     }
 
     try:
-        # Create a session to handle cookies
-        session = requests.Session()
-
-        # First visit the main page to get cookies
-        session.get("https://www.malabargoldanddiamonds.com/", headers=headers)
-
-        # Fetch the gold rate panel (contains 22K, 18K, 14K rates)
-        panel_url = (
-            "https://www.malabargoldanddiamonds.com/malabarprice/index/currentGoldRate/"
+        response = requests.get(
+            MALABAR_GRAPHQL_URL,
+            params={
+                "query": MALABAR_METAL_RATE_QUERY,
+                "variables": json.dumps({"filter": MALABAR_METAL_RATE_FILTER}),
+            },
+            headers=headers,
+            timeout=20,
         )
-        panel_response = session.get(panel_url, headers=headers)
-        panel_response.raise_for_status()
-        panel_data = panel_response.json()
+        response.raise_for_status()
+        payload = response.json()
 
-        # Parse the HTML in the response to extract rates
-        if "data" in panel_data:
-            html_content = panel_data["data"]
-            # Extract rates using string parsing (format: "22 KT(916) - </td><td>₹  12650/g")
+        if payload.get("errors"):
+            first_error = payload["errors"][0]
+            message = first_error.get("message", str(first_error))
+            results["error"] = message
+            return results
 
-            # Pattern to match karat and price
-            pattern = r"(\d+)\s*KT\([^)]+\)\s*-\s*</td><td>[^0-9]*(\d+)/g"
-            matches = re.findall(pattern, html_content)
+        items = payload.get("data", {}).get("getMetalRate", {}).get("items")
+        if not items:
+            results["error"] = "No rates found in GraphQL response"
+            return results
 
-            for karat, price in matches:
-                results["rates"][f"{karat}K"] = price
+        latest_by_purity = {}
+        for item in items:
+            purity_key = item.get("purity", "").lower()
+            if purity_key not in MALABAR_TARGET_PURITIES:
+                continue
+            entry_key = (item.get("entry_date", ""), item.get("entry_time", ""))
+            if (
+                purity_key not in latest_by_purity
+                or entry_key > latest_by_purity[purity_key][0]
+            ):
+                latest_by_purity[purity_key] = (entry_key, item)
 
-        # Also fetch the getrates API for 24K rate (may not be in panel)
-        rates_url = "https://www.malabargoldanddiamonds.com/malabarprice/index/getrates/?country=IN&state=Karnataka"
-        rates_response = session.get(rates_url, headers=headers)
-        rates_response.raise_for_status()
-        rates_data = rates_response.json()
+        for purity_key, label in MALABAR_TARGET_PURITIES.items():
+            if purity_key not in latest_by_purity:
+                continue
+            item = latest_by_purity[purity_key][1]
+            rate_str = str(item.get("rate", "")).replace(",", "").split(".")[0]
+            if rate_str:
+                results["rates"][label] = rate_str
 
-        # Extract 24kt if available and not already present
-        if "24kt" in rates_data and "24K" not in results["rates"]:
-            # Parse the price (format: "13,800.00 INR")
-            price_24k = rates_data["24kt"].replace(",", "").split(".")[0]
-            results["rates"]["24K"] = price_24k
-
-        # Update 22K from getrates if not already present (as backup)
-        if "22kt" in rates_data and "22K" not in results["rates"]:
-            price_22k = rates_data["22kt"].replace(",", "").split(".")[0]
-            results["rates"]["22K"] = price_22k
-
-        # Extract date from getrates updated_time (format: "DD/MM/YYYY HH:MM AM/PM")
-        updated_time = rates_data.get("updated_time", "")
-        date_match = re.search(r"(\d{2})/(\d{2})/(\d{4})", updated_time)
-        if date_match:
-            d, m, y = date_match.groups()
-            results["date"] = f"{y}-{m}-{d}"
+        if "24k" in latest_by_purity:
+            entry_date = latest_by_purity["24k"][1].get("entry_date", "")
+            if entry_date:
+                results["date"] = entry_date[:10]
 
         if results["rates"]:
             results["success"] = True
         else:
-            results["error"] = "No rates found in API response"
+            results["error"] = "No rates found in GraphQL response"
 
     except requests.RequestException as e:
         results["error"] = f"Request failed: {str(e)}"
