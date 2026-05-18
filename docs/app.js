@@ -2,6 +2,12 @@ $(document).ready(function () {
     let priceChart;
     let goldData = [];
 
+    function trackEvent(name, params) {
+        if (typeof gtag === 'function' && window.GA_MEASUREMENT_ID) {
+            gtag('event', name, params);
+        }
+    }
+
     function normalizeRow(row) {
         const date = row.date;
         return {
@@ -83,6 +89,7 @@ $(document).ready(function () {
     $('.tab-btn').on('click', function () {
         $('.tab-btn').removeClass('active');
         $(this).addClass('active');
+        trackEvent('purity_change', { purity: $(this).data('purity') });
         refreshView();
     });
 
@@ -106,10 +113,17 @@ $(document).ready(function () {
             $('#custom-range-picker').fadeOut();
         }
 
+        trackEvent('time_range_change', { range: range });
         refreshView();
     });
 
     $('.date-input').on('change', function () {
+        if ($('.time-btn.active').data('range') === 'custom') {
+            trackEvent('custom_date_change', {
+                start: $('#start-date').val(),
+                end: $('#end-date').val(),
+            });
+        }
         refreshView();
     });
 

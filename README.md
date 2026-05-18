@@ -95,6 +95,19 @@ The site is deployed by [`.github/workflows/pages.yml`](.github/workflows/pages.
 
 After merging to `main`, open the [Deploy GitHub Pages](https://github.com/swateek/svarna-ledger/actions/workflows/pages.yml) workflow run to confirm success, then verify [the live site](https://swateek.github.io/svarna-ledger/).
 
+### Analytics (Google Analytics 4)
+
+Page views and filter interactions (purity, time range, custom dates) are tracked in production via GA4.
+
+**One-time setup:**
+
+1. In [Google Analytics](https://analytics.google.com/), create a property and add a **Web** data stream for `https://swateek.github.io/svarna-ledger/`.
+2. Copy the **Measurement ID** (`G-XXXXXXXXXX`).
+3. Add repository secret `GA_MEASUREMENT_ID` (Settings → Secrets → Actions). Redeploy Pages (push to `main` or re-run the deploy workflow).
+4. Verify in GA4 **Reports → Realtime** after visiting the live site and clicking a few filters.
+
+Local dev leaves `GA_MEASUREMENT_ID` empty in `docs/config.js` so analytics are disabled.
+
 ### GitHub Actions secrets
 
 Add these repository secrets (Settings → Secrets → Actions):
@@ -102,6 +115,7 @@ Add these repository secrets (Settings → Secrets → Actions):
 - `SUPABASE_URL`
 - `SUPABASE_SECRET_KEY` (scraper / backfill)
 - `SUPABASE_PUBLISHABLE_KEY` (GitHub Pages frontend; publishable or anon key with read-only RLS)
+- `GA_MEASUREMENT_ID` (optional; GA4 Measurement ID for production analytics)
 
 ## Project Structure
 

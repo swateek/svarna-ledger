@@ -30,6 +30,7 @@ jobs:
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_PUBLISHABLE_KEY: ${{ secrets.SUPABASE_PUBLISHABLE_KEY }}
+          GA_MEASUREMENT_ID: ${{ secrets.GA_MEASUREMENT_ID }}
         run: |
           if [ -z "$SUPABASE_URL" ] || [ -z "$SUPABASE_PUBLISHABLE_KEY" ]; then
             echo "SUPABASE_URL and SUPABASE_PUBLISHABLE_KEY secrets must be set"
@@ -39,10 +40,12 @@ jobs:
           import os
           url = os.environ['SUPABASE_URL']
           key = os.environ['SUPABASE_PUBLISHABLE_KEY']
+          ga_id = os.environ.get('GA_MEASUREMENT_ID', '') or ''
           with open('docs/config.js', 'w') as f:
               f.write('// Generated at deploy time — do not commit\n')
               f.write(f'window.SUPABASE_URL = {url!r};\n')
               f.write(f'window.SUPABASE_PUBLISHABLE_KEY = {key!r};\n')
+              f.write(f'window.GA_MEASUREMENT_ID = {ga_id!r};\n')
           "
 
       - name: Setup Pages
